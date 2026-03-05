@@ -1,0 +1,10 @@
+CompileFlags:
+  Add:
+    - -Wno-vla-extension
+    - -I.\\include
+    - -lSDL3
+    - -lSDL3_image
+    - -Wall
+    - -O2
+    - -Wno-unused-const-variable
+    - -Wno-sign-conversion
