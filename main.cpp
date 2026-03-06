@@ -7,6 +7,7 @@ using namespace std;
 /////////////////////////////////////////////////////////////////////
 #define PI			3.1415926
 #define	COLORNUM	14
+const float DEG2RAD = 3.14159f / 180.0f;
 
 float	ColorArr[COLORNUM][3] = { { 1.0, 0.0, 0.0 },{ 0.0, 1.0, 0.0 },{ 0.0,  0.0, 1.0 },
 					{ 1.0, 1.0,  0.0 },{ 1.0, 0.0, 1.0 },{ 0.0, 1.0, 1.0 },
@@ -218,6 +219,130 @@ void Mesh::CreateCube(float	fSize)
 	face[5].vert[3].vertIndex = 7;
 }
 
+
+void Mesh::CreateCuboid(float fSizeX, float fSizeY, float fSizeZ)
+{
+	fSizeX /= 2;
+	fSizeY /= 2;
+	fSizeZ /= 2;
+
+	numVerts = 8;
+	pt = new Point3[numVerts];
+	pt[0].set(fSizeX, fSizeY, fSizeZ);
+	pt[1].set(fSizeX, fSizeY, -fSizeZ);
+	pt[2].set(fSizeX, -fSizeY, fSizeZ);
+	pt[3].set(fSizeX, -fSizeY, -fSizeZ);
+	pt[4].set(-fSizeX, fSizeY, fSizeZ);
+	pt[5].set(-fSizeX, fSizeY, -fSizeZ);
+	pt[6].set(-fSizeX, -fSizeY, fSizeZ);
+	pt[7].set(-fSizeX, -fSizeY, -fSizeZ);
+
+	numFaces = 6;
+	face = new Face[numFaces];
+
+	//front face
+	face[0].nVerts = 4;
+	face[0].vert = new VertexID[face[0].nVerts];
+	face[0].vert[0].vertIndex = 0;
+	face[0].vert[1].vertIndex = 1;
+	face[0].vert[3].vertIndex = 2;
+	face[0].vert[2].vertIndex = 3;
+
+	//right face
+	face[1].nVerts = 4;
+	face[1].vert = new VertexID[face[1].nVerts];
+	face[1].vert[0].vertIndex = 0;
+	face[1].vert[1].vertIndex = 1;
+	face[1].vert[3].vertIndex = 4;
+	face[1].vert[2].vertIndex = 5;
+
+	//left face
+	face[2].nVerts = 4;
+	face[2].vert = new VertexID[face[2].nVerts];
+	face[2].vert[0].vertIndex = 2;
+	face[2].vert[1].vertIndex = 3;
+	face[2].vert[3].vertIndex = 6;
+	face[2].vert[2].vertIndex = 7;
+
+	//back face
+	face[3].nVerts = 4;
+	face[3].vert = new VertexID[face[3].nVerts];
+	face[3].vert[0].vertIndex = 4;
+	face[3].vert[1].vertIndex = 5;
+	face[3].vert[3].vertIndex = 6;
+	face[3].vert[2].vertIndex = 7;
+
+	//top face
+	face[4].nVerts = 4;
+	face[4].vert = new VertexID[face[4].nVerts];
+	face[4].vert[0].vertIndex = 0;
+	face[4].vert[1].vertIndex = 2;
+	face[4].vert[3].vertIndex = 4;
+	face[4].vert[2].vertIndex = 6;
+
+	//top face
+	face[5].nVerts = 4;
+	face[5].vert = new VertexID[face[5].nVerts];
+	face[5].vert[0].vertIndex = 1;
+	face[5].vert[1].vertIndex = 3;
+	face[5].vert[3].vertIndex = 5;
+	face[5].vert[2].vertIndex = 7;
+}
+
+void Mesh::CreateCylinder(int nSegment, float fHeight, float fRadius)
+{
+	numVerts = nSegment * 2 + 2;
+	pt = new Point3[numVerts];
+
+	float angle = 0;
+	float angle_increment = 360.0f / nSegment;
+	std::cout << angle_increment << std::endl;
+
+	for(int i = 0; i < nSegment; ++i)
+	{
+		pt[i].set(fRadius * cos(DEG2RAD * angle), -fHeight, fRadius * sin(DEG2RAD * angle));
+		std::cout << pt[i].x << ' ' << pt[i].y << ' ' << pt[i].z << std::endl;
+		angle += angle_increment;
+	}
+	
+	angle = 0;
+
+	for(int i = nSegment; i < nSegment * 2; ++i)
+	{
+		pt[i].set(fRadius * cos(DEG2RAD * angle), fHeight, fRadius * sin(DEG2RAD * angle));
+		std::cout << pt[i].x << ' ' << pt[i].y << ' ' << pt[i].z << std::endl;
+		angle += angle_increment;
+	}
+
+	pt[nSegment].set(0, -fHeight, 0);
+	pt[nSegment+1].set(0, fHeight, 0);
+
+	numFaces = nSegment;
+	face = new Face[numFaces];
+
+	for(int i = 0; i < 1; ++i)
+	{
+		face[i].nVerts = 6;
+		face[i].vert = new VertexID[face[i].nVerts];
+		face[i].vert[0].vertIndex = nSegment;
+		face[i].vert[1].vertIndex = i;
+		face[i].vert[2].vertIndex = i < nSegment - 1 ? i + 1 : 0;
+		face[i].vert[3].vertIndex = i + nSegment;
+		face[i].vert[4].vertIndex = i < nSegment - 1 ? i + nSegment + 1 : nSegment;
+		face[i].vert[5].vertIndex = nSegment+1;
+	}
+}
+
+void Mesh::CreateSphere(int nSlice, int nStack, float radius)
+{
+
+}
+
+void Mesh::CreateTorus(int fSizeA, int fSizeD)
+{
+
+}
+
 void Mesh::DrawWireframe()
 {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -277,6 +402,8 @@ int		nChoice = 0;
 
 Mesh    	cube;
 Mesh		tetrahedron;
+Mesh		cuboid;
+Mesh		cylinder;
 
 void drawAxis()
 {
@@ -315,6 +442,10 @@ void myDisplay()
 		cube.DrawWireframe();
 	else if (nChoice == 1)
 		tetrahedron.DrawWireframe();
+	else if (nChoice == 2)
+		cuboid.DrawWireframe();
+	else if (nChoice == 3)
+		cylinder.DrawWireframe();
 
 
 	/////////////////////////////////////////////////////////////
@@ -328,6 +459,10 @@ void myDisplay()
 		cube.DrawColor();
 	else if (nChoice == 1)
 		tetrahedron.DrawColor();
+	else if (nChoice == 2)
+		cuboid.DrawColor();
+	else if (nChoice == 3)
+		cylinder.DrawColor();
 
 
 	glFlush();
@@ -354,6 +489,9 @@ void myKeyboard(unsigned char key, int x, int y)
 	case '2':
 		nChoice = 2;
 		break;
+	case '3':
+		nChoice = 3;
+		break;
 	}
 	glutPostRedisplay();
 }
@@ -378,6 +516,8 @@ int main(int argc, _TCHAR* argv[])
 
 	cout << "0. Cube" << endl;
 	cout << "1. Tetrahedron" << endl;
+	cout << "2. Cuboid" << endl;
+	cout << "3. Cylinder" << endl;
 
 
 	cout << endl<< "Input the choice: " << endl;
@@ -396,6 +536,8 @@ int main(int argc, _TCHAR* argv[])
 
 	cube.CreateCube(2);
 	tetrahedron.CreateTetrahedron(4);
+	cuboid.CreateCuboid(2, 4, 6);
+	cylinder.CreateCylinder(20, 2, 2);
 
 	glutMainLoop();
     	return 0;
