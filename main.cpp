@@ -296,7 +296,6 @@ void Mesh::CreateCylinder(int nSegment, float fHeight, float fRadius)
 
 	float angle = 0;
 	float angle_increment = 360.0f / nSegment;
-	std::cout << angle_increment << std::endl;
 
 	for(int i = 0; i < nSegment; ++i)
 	{
@@ -315,27 +314,58 @@ void Mesh::CreateCylinder(int nSegment, float fHeight, float fRadius)
 	}
 
 	pt[2 * nSegment].set(0, -fHeight, 0);
-	pt[2 * nSegment+1].set(0, fHeight, 0);
+	pt[2 * nSegment + 1].set(0, fHeight, 0);
 
 	numFaces = nSegment;
 	face = new Face[numFaces];
 
-	for(int i = 0; i < 1; ++i)
+	for(int i = 0; i < nSegment; ++i)
 	{
 		face[i].nVerts = 6;
 		face[i].vert = new VertexID[face[i].nVerts];
-		face[i].vert[0].vertIndex = nSegment;
+		face[i].vert[2].vertIndex = i + nSegment;
+		face[i].vert[3].vertIndex = i < nSegment - 1 ? i + nSegment + 1 : nSegment;
 		face[i].vert[1].vertIndex = i;
-		face[i].vert[2].vertIndex = i < nSegment - 1 ? i + 1 : 0;
-		face[i].vert[3].vertIndex = i + nSegment;
-		face[i].vert[4].vertIndex = i < nSegment - 1 ? i + nSegment + 1 : nSegment;
-		face[i].vert[5].vertIndex = nSegment+1;
+		face[i].vert[0].vertIndex = i < nSegment - 1 ? i + 1 : 0;
+		face[i].vert[5].vertIndex = 2 * nSegment;
+		face[i].vert[4].vertIndex = 2 * nSegment + 1;
 	}
 }
 
 void Mesh::CreateSphere(int nSlice, int nStack, float radius)
 {
+	float phi = 0, theta = 0;
+	float phi_increment = 360.0f / nSlice, theta_increment = 360.0f / nStack;
 
+	numVerts = nStack * nSlice;
+	pt = new Point3[numVerts];
+
+	for(int i = 0; i < nStack; ++i)
+	{
+		for(int j = 0; j < nSlice; ++j)
+		{
+			pt[i * nSlice + j].set(radius * sin(DEG2RAD * theta) * sin(DEG2RAD * phi), radius * cos(DEG2RAD * theta) * sin(DEG2RAD * phi), radius * cos(DEG2RAD * phi));
+			phi = phi_increment * j;
+		}
+		theta = theta_increment * i;
+	}
+
+	numFaces = nStack * nSlice;
+	face = new Face[numFaces];
+
+	for(int i = 0; i < nStack / 2 + 1; ++i)
+	{
+		for(int j = 0; j < nSlice; ++j)
+		{
+			face[i * nSlice + j].nVerts = 4;
+			face[i * nSlice + j].vert = new VertexID[face[i * nSlice + j].nVerts];
+
+			face[i * nSlice + j].vert[0].vertIndex = i * nSlice + j;
+			face[i * nSlice + j].vert[1].vertIndex = i * nSlice + (j + 1 % nSlice);
+			face[i * nSlice + j].vert[3].vertIndex = i * nSlice + j + nSlice;
+			face[i * nSlice + j].vert[2].vertIndex = i * nSlice + (j + 1 % nSlice) + nSlice;
+		}
+	}
 }
 
 void Mesh::CreateTorus(int fSizeA, int fSizeD)
@@ -404,6 +434,7 @@ Mesh    	cube;
 Mesh		tetrahedron;
 Mesh		cuboid;
 Mesh		cylinder;
+Mesh		sphere;
 
 void drawAxis()
 {
@@ -446,6 +477,8 @@ void myDisplay()
 		cuboid.DrawWireframe();
 	else if (nChoice == 3)
 		cylinder.DrawWireframe();
+	else if (nChoice == 4)
+		sphere.DrawWireframe();
 
 
 	/////////////////////////////////////////////////////////////
@@ -463,6 +496,8 @@ void myDisplay()
 		cuboid.DrawColor();
 	else if (nChoice == 3)
 		cylinder.DrawColor();
+	else if (nChoice == 4)
+		sphere.DrawColor();
 
 
 	glFlush();
@@ -492,6 +527,9 @@ void myKeyboard(unsigned char key, int x, int y)
 	case '3':
 		nChoice = 3;
 		break;
+	case '4':
+		nChoice = 4;
+		break;
 	}
 	glutPostRedisplay();
 }
@@ -518,6 +556,7 @@ int main(int argc, _TCHAR* argv[])
 	cout << "1. Tetrahedron" << endl;
 	cout << "2. Cuboid" << endl;
 	cout << "3. Cylinder" << endl;
+	cout << "4. Sphere" << endl;
 
 
 	cout << endl<< "Input the choice: " << endl;
@@ -538,6 +577,7 @@ int main(int argc, _TCHAR* argv[])
 	tetrahedron.CreateTetrahedron(4);
 	cuboid.CreateCuboid(2, 4, 6);
 	cylinder.CreateCylinder(20, 2, 2);
+	sphere.CreateSphere(20, 30, 2);
 
 	glutMainLoop();
     	return 0;
