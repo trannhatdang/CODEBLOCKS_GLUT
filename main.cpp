@@ -301,7 +301,7 @@ void Mesh::CreateCylinder(int nSegment, float fHeight, float fRadius)
 	for(int i = 0; i < nSegment; ++i)
 	{
 		pt[i].set(fRadius * cos(DEG2RAD * angle), -fHeight, fRadius * sin(DEG2RAD * angle));
-		std::cout << pt[i].x << ' ' << pt[i].y << ' ' << pt[i].z << std::endl;
+		//std::cout << pt[i].x << ' ' << pt[i].y << ' ' << pt[i].z << std::endl;
 		angle += angle_increment;
 	}
 	
@@ -310,12 +310,12 @@ void Mesh::CreateCylinder(int nSegment, float fHeight, float fRadius)
 	for(int i = nSegment; i < nSegment * 2; ++i)
 	{
 		pt[i].set(fRadius * cos(DEG2RAD * angle), fHeight, fRadius * sin(DEG2RAD * angle));
-		std::cout << pt[i].x << ' ' << pt[i].y << ' ' << pt[i].z << std::endl;
+		//std::cout << pt[i].x << ' ' << pt[i].y << ' ' << pt[i].z << std::endl;
 		angle += angle_increment;
 	}
 
-	pt[nSegment].set(0, -fHeight, 0);
-	pt[nSegment+1].set(0, fHeight, 0);
+	pt[2 * nSegment].set(0, -fHeight, 0);
+	pt[2 * nSegment+1].set(0, fHeight, 0);
 
 	numFaces = nSegment;
 	face = new Face[numFaces];
