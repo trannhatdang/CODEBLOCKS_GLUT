@@ -15,83 +15,6 @@ float	ColorArr[COLORNUM][3] = { { 1.0, 0.0, 0.0 },{ 0.0, 1.0, 0.0 },{ 0.0,  0.0,
 					{ 1.0, 0.5,  0.5 },{ 0.5, 1.0, 0.5 },{ 0.5, 0.5, 1.0 },
 					{ 0.0, 0.0, 0.0 },{ 0.7, 0.7, 0.7 } };
 
-void MultRow(float** mat, int n, int i, int multiplier)
-{
-	if(!mat[i])
-	{
-		std::cout << "Invalid Matrix entered into DivRow!" << std::endl;
-		return;
-	}
-
-	for(int j = 0; j < n; ++j)
-	{
-		mat[i][j] *= multiplier;
-	}
-}
-
-void AddRow(float** mat, int n, int operand, int operated)
-{
-	if(!mat[operand] || !mat[operated])
-	{
-		std::cout << "Invalid Matrix entered into AddRow!" << std::endl;
-		return;
-	}
-
-	for(int j = 0; j < n; ++j)
-	{
-		mat[operated][j] += mat[operand][j];
-	}
-}
-
-float* FindSolution(float** mat, int m, int n, float* c, int c_size)
-{
-	float* sol = new float[c_size];
-
-	float** mat_cpy = new float*[m];
-	float* c_cpy = new float[c_size];
-
-	for(int i = 0; i < m; ++i)
-	{
-		mat_cpy[i] = new float[n];
-		for(int j = 0; j < n; ++j)
-		{
-			mat_cpy[i][j] = mat[i][j];
-		}
-	}
-
-	for(int i = 0; i < c_size; ++i)
-	{
-		c_cpy[i] = c[i];
-	}
-
-	for(int i = 0; i < m; ++i)
-	{
-		for(int j = i; j < n; ++j)
-		{
-			MultRow(mat_cpy, n, j, 1 / mat_cpy[i][j]);
-		}
-
-		for(int j = i + 1; j < n; ++j)
-		{
-			AddRow(mat_cpy, n, 0, j);
-		}
-	}
-
-	for(int i = 0; i < m; ++i)
-	{
-		for(int j = 0; j < n; ++j)
-		{
-			std::cout << mat_cpy[i][j] << std::endl;
-		}
-
-		delete[] mat_cpy[i];
-	}
-
-	delete[] c_cpy;
-
-	return sol;
-}
-
 class Point3
 {
 public:
@@ -180,6 +103,9 @@ public:
 	void CreateCylinder(int nSegment, float fHeight, float fRadius);
 	void CreateSphere(int nSlice, int nStack, float radius);
 	void CreateTorus(int fSizeA, int fSizeD);
+	void CreatePlatonic8(float fSize);
+	void CreatePlatonic12(float fSize);
+	void CreatePlatonic20(float fSize);
 };
 
 void Mesh::CreateTetrahedron(float fSize)
@@ -483,6 +409,148 @@ void Mesh::CreateTorus(int fSizeA, int fSizeD)
 			//std::cout << "( " << pt[i * numV + j].x << ", " << pt[i + numV + j].y << ", " << pt[i + numV + j].z << ")" << std::endl;
 		}
 	}
+}
+
+void Mesh::CreatePlatonic8(float fSize)
+{
+	numVerts = 6;
+	pt = new Point3[numVerts];
+	pt[0].set(0, fSize * sin(DEG2RAD * 45), 0);
+	pt[1].set(fSize, 0, 0);
+	pt[2].set(-fSize, 0, 0);
+	pt[3].set(0, 0, fSize);
+	pt[4].set(0, 0, -fSize);
+	pt[5].set(0, -fSize * sin(DEG2RAD * 45), 0);
+
+	numFaces = 8;
+	face = new Face[numFaces];
+
+	//Top front face
+	face[0].nVerts = 3;
+	face[0].vert = new VertexID[face[0].nVerts];
+	face[0].vert[0].vertIndex = 0;
+	face[0].vert[1].vertIndex = 1;
+	face[0].vert[2].vertIndex = 3;
+
+	//Top right face
+	face[1].nVerts = 3;
+	face[1].vert = new VertexID[face[1].nVerts];
+	face[1].vert[0].vertIndex = 0;
+	face[1].vert[1].vertIndex = 3;
+	face[1].vert[2].vertIndex = 2;
+
+	//Top back face
+	face[2].nVerts = 3;
+	face[2].vert = new VertexID[face[2].nVerts];
+	face[2].vert[0].vertIndex = 0;
+	face[2].vert[1].vertIndex = 2;
+	face[2].vert[2].vertIndex = 4;
+
+	//Top left face
+	face[3].nVerts = 3;
+	face[3].vert = new VertexID[face[3].nVerts];
+	face[3].vert[0].vertIndex = 0;
+	face[3].vert[1].vertIndex = 4;
+	face[3].vert[2].vertIndex = 1;
+
+	//Bottom front face
+	face[4].nVerts = 4;
+	face[4].vert = new VertexID[face[4].nVerts];
+	face[4].vert[0].vertIndex = 5;
+	face[4].vert[1].vertIndex = 1;
+	face[4].vert[2].vertIndex = 3;
+
+	//Bottom right face
+	face[5].nVerts = 3;
+	face[5].vert = new VertexID[face[5].nVerts];
+	face[5].vert[0].vertIndex = 5;
+	face[5].vert[1].vertIndex = 3;
+	face[5].vert[2].vertIndex = 2;
+
+	//Bottom back face
+	face[6].nVerts = 3;
+	face[6].vert = new VertexID[face[6].nVerts];
+	face[6].vert[0].vertIndex = 5;
+	face[6].vert[1].vertIndex = 2;
+	face[6].vert[2].vertIndex = 4;
+
+	//Bottom left face
+	face[7].nVerts = 3;
+	face[7].vert = new VertexID[face[7].nVerts];
+	face[7].vert[0].vertIndex = 5;
+	face[7].vert[1].vertIndex = 4;
+	face[7].vert[2].vertIndex = 1;
+}
+
+void Mesh::CreatePlatonic12(float fSize)
+{
+	numVerts = 20;
+	pt = new Point3[numVerts];
+	pt[0].set(0, fSize * sin(DEG2RAD * 45), 0);
+	pt[1].set(fSize, 0, 0);
+	pt[2].set(-fSize, 0, 0);
+	pt[3].set(0, 0, fSize);
+	pt[4].set(0, 0, -fSize);
+	pt[5].set(0, -fSize * sin(DEG2RAD * 45), 0);
+
+	numFaces = 12;
+	face = new Face[numFaces];
+
+	//Top front face
+	face[0].nVerts = 3;
+	face[0].vert = new VertexID[face[0].nVerts];
+	face[0].vert[0].vertIndex = 0;
+	face[0].vert[1].vertIndex = 1;
+	face[0].vert[2].vertIndex = 3;
+
+	//Top right face
+	face[1].nVerts = 3;
+	face[1].vert = new VertexID[face[1].nVerts];
+	face[1].vert[0].vertIndex = 0;
+	face[1].vert[1].vertIndex = 3;
+	face[1].vert[2].vertIndex = 2;
+
+	//Top back face
+	face[2].nVerts = 3;
+	face[2].vert = new VertexID[face[2].nVerts];
+	face[2].vert[0].vertIndex = 0;
+	face[2].vert[1].vertIndex = 2;
+	face[2].vert[2].vertIndex = 4;
+
+	//Top left face
+	face[3].nVerts = 3;
+	face[3].vert = new VertexID[face[3].nVerts];
+	face[3].vert[0].vertIndex = 0;
+	face[3].vert[1].vertIndex = 4;
+	face[3].vert[2].vertIndex = 1;
+
+	//Bottom front face
+	face[4].nVerts = 4;
+	face[4].vert = new VertexID[face[4].nVerts];
+	face[4].vert[0].vertIndex = 5;
+	face[4].vert[1].vertIndex = 1;
+	face[4].vert[2].vertIndex = 3;
+
+	//Bottom right face
+	face[5].nVerts = 3;
+	face[5].vert = new VertexID[face[5].nVerts];
+	face[5].vert[0].vertIndex = 5;
+	face[5].vert[1].vertIndex = 3;
+	face[5].vert[2].vertIndex = 2;
+
+	//Bottom back face
+	face[6].nVerts = 3;
+	face[6].vert = new VertexID[face[6].nVerts];
+	face[6].vert[0].vertIndex = 5;
+	face[6].vert[1].vertIndex = 2;
+	face[6].vert[2].vertIndex = 4;
+
+	//Bottom left face
+	face[7].nVerts = 3;
+	face[7].vert = new VertexID[face[7].nVerts];
+	face[7].vert[0].vertIndex = 5;
+	face[7].vert[1].vertIndex = 4;
+	face[7].vert[2].vertIndex = 1;
 }
 
 void Mesh::DrawWireframe()
