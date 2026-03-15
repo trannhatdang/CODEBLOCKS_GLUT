@@ -612,134 +612,150 @@ void Mesh::CreatePlatonic12(float fSize)
 	face[11].vert[4].vertIndex = 18;
 }
 
-// void Mesh::CreatePlatonic20(float fSize)
-// {
-// 	float golden_ratio = (1 + sqrt(5)) / 2;
-// 	float a = fSize / 2;
-// 	float b = a * golden_ratio;
-//
-// 	numVerts = 12;
-// 	pt = new Point3[numVerts];
-// 	pt[0].set(-a, -b, 0);
-// 	pt[1].set(a, -b, 0);
-// 	pt[2].set(-a, b, 0);
-// 	pt[3].set(a, b, 0);
-// 	pt[4].set(0, -a, -b);
-// 	pt[5].set(b, -b, b);
-// 	pt[6].set(-b, b, b);
-// 	pt[7].set(b, b, b);
-// 	pt[8].set(c, -a, 0);
-// 	pt[9].set(c, a, 0);
-// 	pt[10].set(-c, -a, 0);
-// 	pt[11].set(-c, a, 0);
-// 	pt[12].set(a, 0, -c);
-// 	pt[13].set(-a, 0, -c);
-// 	pt[14].set(a, 0, c);
-// 	pt[15].set(-a, 0, c);
-// 	pt[16].set(0, -c, -a);
-// 	pt[17].set(0, -c, a);
-// 	pt[18].set(0, c, -a);
-// 	pt[19].set(0, c, a);
-//
-// 	numFaces = 12;
-// 	face = new Face[numFaces];
-//
-// 	face[0].nVerts = 5;
-// 	face[0].vert = new VertexID[face[0].nVerts];
-// 	face[0].vert[0].vertIndex = 1;
-// 	face[0].vert[1].vertIndex = 12;
-// 	face[0].vert[2].vertIndex = 3;
-// 	face[0].vert[3].vertIndex = 9;
-// 	face[0].vert[4].vertIndex = 8;
-//
-// 	face[1].nVerts = 5;
-// 	face[1].vert = new VertexID[face[1].nVerts];
-// 	face[1].vert[0].vertIndex = 5;
-// 	face[1].vert[1].vertIndex = 8;
-// 	face[1].vert[2].vertIndex = 9;
-// 	face[1].vert[3].vertIndex = 7;
-// 	face[1].vert[4].vertIndex = 14;
-//
-// 	face[2].nVerts = 5;
-// 	face[2].vert = new VertexID[face[2].nVerts];
-// 	face[2].vert[0].vertIndex = 0;
-// 	face[2].vert[1].vertIndex = 10;
-// 	face[2].vert[2].vertIndex = 11;
-// 	face[2].vert[3].vertIndex = 2;
-// 	face[2].vert[4].vertIndex = 13;
-//
-// 	face[3].nVerts = 5;
-// 	face[3].vert = new VertexID[face[3].nVerts];
-// 	face[3].vert[0].vertIndex = 4;
-// 	face[3].vert[1].vertIndex = 15;
-// 	face[3].vert[2].vertIndex = 6;
-// 	face[3].vert[3].vertIndex = 11;
-// 	face[3].vert[4].vertIndex = 10;
-//
-// 	face[4].nVerts = 5;
-// 	face[4].vert = new VertexID[face[4].nVerts];
-// 	face[4].vert[0].vertIndex = 1;
-// 	face[4].vert[1].vertIndex = 16;
-// 	face[4].vert[2].vertIndex = 0;
-// 	face[4].vert[3].vertIndex = 13;
-// 	face[4].vert[4].vertIndex = 12;
-//
-// 	face[5].nVerts = 5;
-// 	face[5].vert = new VertexID[face[5].nVerts];
-// 	face[5].vert[0].vertIndex = 3;
-// 	face[5].vert[1].vertIndex = 12;
-// 	face[5].vert[2].vertIndex = 13;
-// 	face[5].vert[3].vertIndex = 2;
-// 	face[5].vert[4].vertIndex = 18;
-//
-// 	face[6].nVerts = 5;
-// 	face[6].vert = new VertexID[face[6].nVerts];
-// 	face[6].vert[0].vertIndex = 5;
-// 	face[6].vert[1].vertIndex = 14;
-// 	face[6].vert[2].vertIndex = 15;
-// 	face[6].vert[3].vertIndex = 4;
-// 	face[6].vert[4].vertIndex = 17;
-//
-// 	face[7].nVerts = 5;
-// 	face[7].vert = new VertexID[face[7].nVerts];
-// 	face[7].vert[0].vertIndex = 7;
-// 	face[7].vert[1].vertIndex = 19;
-// 	face[7].vert[2].vertIndex = 6;
-// 	face[7].vert[3].vertIndex = 15;
-// 	face[7].vert[4].vertIndex = 14;
-//
-// 	face[8].nVerts = 5;
-// 	face[8].vert = new VertexID[face[8].nVerts];
-// 	face[8].vert[0].vertIndex = 1;
-// 	face[8].vert[1].vertIndex = 8;
-// 	face[8].vert[2].vertIndex = 5;
-// 	face[8].vert[3].vertIndex = 17;
-// 	face[8].vert[4].vertIndex = 16;
-//
-// 	face[9].nVerts = 5;
-// 	face[9].vert = new VertexID[face[9].nVerts];
-// 	face[9].vert[0].vertIndex = 0;
-// 	face[9].vert[1].vertIndex = 16;
-// 	face[9].vert[2].vertIndex = 17;
-// 	face[9].vert[3].vertIndex = 4;
-// 	face[9].vert[4].vertIndex = 10;
-//
-// 	face[10].nVerts = 5;
-// 	face[10].vert = new VertexID[face[10].nVerts];
-// 	face[10].vert[0].vertIndex = 3;
-// 	face[10].vert[1].vertIndex = 18;
-// 	face[10].vert[2].vertIndex = 19;
-// 	face[10].vert[3].vertIndex = 7;
-// 	face[10].vert[4].vertIndex = 9;
-//
-// 	face[11].nVerts = 5;
-// 	face[11].vert = new VertexID[face[11].nVerts];
-// 	face[11].vert[0].vertIndex = 2;
-// 	face[11].vert[1].vertIndex = 11;
-// 	face[11].vert[2].vertIndex = 6;
-// 	face[11].vert[3].vertIndex = 19;
-// 	face[11].vert[4].vertIndex = 18;
-// }
+void Mesh::CreatePlatonic20(float fSize)
+{
+	float golden_ratio = (1 + sqrt(5)) / 2;
+	float a = fSize / 2;
+	float b = a * golden_ratio;
+
+	numVerts = 12;
+	pt = new Point3[numVerts];
+	pt[0].set(-a, -b, 0);
+	pt[1].set(a, -b, 0);
+	pt[2].set(-a, b, 0);
+	pt[3].set(a, b, 0);
+	pt[4].set(0, -a, -b);
+	pt[5].set(0, a, -b);
+	pt[6].set(0, -a, b);
+	pt[7].set(0, a, b);
+	pt[8].set(-b, 0, -a);
+	pt[9].set(-b, 0, a);
+	pt[10].set(b, 0, -a);
+	pt[11].set(b, 0, a);
+
+	numFaces = 20;
+	face = new Face[numFaces];
+
+	face[0].nVerts = 3;
+	face[0].vert = new VertexID[face[0].nVerts];
+	face[0].vert[0].vertIndex = 4;
+	face[0].vert[1].vertIndex = 5;
+	face[0].vert[2].vertIndex = 10;
+
+	face[1].nVerts = 3;
+	face[1].vert = new VertexID[face[1].nVerts];
+	face[1].vert[0].vertIndex = 4;
+	face[1].vert[1].vertIndex = 8;
+	face[1].vert[2].vertIndex = 5;
+
+	face[2].nVerts = 3;
+	face[2].vert = new VertexID[face[2].nVerts];
+	face[2].vert[0].vertIndex = 7;
+	face[2].vert[1].vertIndex = 6;
+	face[2].vert[2].vertIndex = 11;
+
+	face[3].nVerts = 3;
+	face[3].vert = new VertexID[face[3].nVerts];
+	face[3].vert[0].vertIndex = 7;
+	face[3].vert[1].vertIndex = 9;
+	face[3].vert[2].vertIndex = 6;
+
+	face[4].nVerts = 3;
+	face[4].vert = new VertexID[face[4].nVerts];
+	face[4].vert[0].vertIndex = 8;
+	face[4].vert[1].vertIndex = 9;
+	face[4].vert[2].vertIndex = 2;
+
+	face[5].nVerts = 3;
+	face[5].vert = new VertexID[face[5].nVerts];
+	face[5].vert[0].vertIndex = 8;
+	face[5].vert[1].vertIndex = 0;
+	face[5].vert[2].vertIndex = 9;
+
+	face[6].nVerts = 3;
+	face[6].vert = new VertexID[face[6].nVerts];
+	face[6].vert[0].vertIndex = 11;
+	face[6].vert[1].vertIndex = 10;
+	face[6].vert[2].vertIndex = 3;
+
+	face[7].nVerts = 3;
+	face[7].vert = new VertexID[face[7].nVerts];
+	face[7].vert[0].vertIndex = 11;
+	face[7].vert[1].vertIndex = 1;
+	face[7].vert[2].vertIndex = 10;
+
+	face[8].nVerts = 3;
+	face[8].vert = new VertexID[face[8].nVerts];
+	face[8].vert[0].vertIndex = 0;
+	face[8].vert[1].vertIndex = 1;
+	face[8].vert[2].vertIndex = 6;
+
+	face[9].nVerts = 3;
+	face[9].vert = new VertexID[face[9].nVerts];
+	face[9].vert[0].vertIndex = 0;
+	face[9].vert[1].vertIndex = 4;
+	face[9].vert[2].vertIndex = 1;
+
+	face[10].nVerts = 3;
+	face[10].vert = new VertexID[face[10].nVerts];
+	face[10].vert[0].vertIndex = 3;
+	face[10].vert[1].vertIndex = 2;
+	face[10].vert[2].vertIndex = 7;
+
+	face[11].nVerts = 3;
+	face[11].vert = new VertexID[face[11].nVerts];
+	face[11].vert[0].vertIndex = 3;
+	face[11].vert[1].vertIndex = 5;
+	face[11].vert[2].vertIndex = 2;
+
+	face[12].nVerts = 3;
+	face[12].vert = new VertexID[face[12].nVerts];
+	face[12].vert[0].vertIndex = 4;
+	face[12].vert[1].vertIndex = 10;
+	face[12].vert[2].vertIndex = 1;
+
+	face[13].nVerts = 3;
+	face[13].vert = new VertexID[face[13].nVerts];
+	face[13].vert[0].vertIndex = 4;
+	face[13].vert[1].vertIndex = 0;
+	face[13].vert[2].vertIndex = 8;
+
+	face[14].nVerts = 3;
+	face[14].vert = new VertexID[face[14].nVerts];
+	face[14].vert[0].vertIndex = 5;
+	face[14].vert[1].vertIndex = 3;
+	face[14].vert[2].vertIndex = 10;
+
+	face[15].nVerts = 3;
+	face[15].vert = new VertexID[face[15].nVerts];
+	face[15].vert[0].vertIndex = 5;
+	face[15].vert[1].vertIndex = 8;
+	face[15].vert[2].vertIndex = 2;
+
+	face[16].nVerts = 3;
+	face[16].vert = new VertexID[face[16].nVerts];
+	face[16].vert[0].vertIndex = 7;
+	face[16].vert[1].vertIndex = 11;
+	face[16].vert[2].vertIndex = 3;
+
+	face[17].nVerts = 3;
+	face[17].vert = new VertexID[face[17].nVerts];
+	face[17].vert[0].vertIndex = 7;
+	face[17].vert[1].vertIndex = 2;
+	face[17].vert[2].vertIndex = 9;
+
+	face[18].nVerts = 3;
+	face[18].vert = new VertexID[face[18].nVerts];
+	face[18].vert[0].vertIndex = 6;
+	face[18].vert[1].vertIndex = 9;
+	face[18].vert[2].vertIndex = 0;
+
+	face[19].nVerts = 3;
+	face[19].vert = new VertexID[face[19].nVerts];
+	face[19].vert[0].vertIndex = 6;
+	face[19].vert[1].vertIndex = 1;
+	face[19].vert[2].vertIndex = 11;
+}
 
 void Mesh::DrawWireframe()
 {
@@ -841,18 +857,12 @@ void myDisplay()
 	glRotatef(angle, 0, 1, 0);
 
 	glColor3f(0, 0, 0);
-	if (nChoice == 0)
-		cube.DrawWireframe();
-	else if (nChoice == 1)
-		tetrahedron.DrawWireframe();
+	if (nChoice == 1)
+		platonic8.DrawWireframe();
 	else if (nChoice == 2)
-		cuboid.DrawWireframe();
+		platonic12.DrawWireframe();
 	else if (nChoice == 3)
-		cylinder.DrawWireframe();
-	else if (nChoice == 4)
-		sphere.DrawWireframe();
-	else if (nChoice == 5)
-		torus.DrawWireframe();
+		platonic20.DrawWireframe();
 
 
 	/////////////////////////////////////////////////////////////
@@ -862,19 +872,12 @@ void myDisplay()
 	drawAxis();
 	glRotatef(angle, 0, 1, 0);
 
-	if (nChoice == 0)
-		cube.DrawColor();
-	else if (nChoice == 1)
-		tetrahedron.DrawColor();
+	if (nChoice == 1)
+		platonic8.DrawColor();
 	else if (nChoice == 2)
-		cuboid.DrawColor();
+		platonic12.DrawColor();
 	else if (nChoice == 3)
-		cylinder.DrawColor();
-	else if (nChoice == 4)
-		sphere.DrawColor();
-	else if (nChoice == 5)
-		torus.DrawColor();
-
+		platonic20.DrawColor();
 
 	glFlush();
 	glutSwapBuffers();
@@ -892,9 +895,6 @@ void myKeyboard(unsigned char key, int x, int y)
 {
 	switch (key)
 	{
-	case '0':
-		nChoice = 0;
-		break;
 	case '1':
 		nChoice = 1;
 		break;
@@ -903,12 +903,6 @@ void myKeyboard(unsigned char key, int x, int y)
 		break;
 	case '3':
 		nChoice = 3;
-		break;
-	case '4':
-		nChoice = 4;
-		break;
-	case '5':
-		nChoice = 5;
 		break;
 	}
 	glutPostRedisplay();
@@ -932,13 +926,9 @@ int main(int argc, _TCHAR* argv[])
 {
 	cout << "Press -> or <- to rotate" << endl;
 
-	cout << "0. Cube" << endl;
-	cout << "1. Tetrahedron" << endl;
-	cout << "2. Cuboid" << endl;
-	cout << "3. Cylinder" << endl;
-	cout << "4. Sphere" << endl;
-	cout << "5. Torus" << endl;
-
+	cout << "1. 8" << endl;
+	cout << "2. 12" << endl;
+	cout << "3. 20" << endl;
 
 	cout << endl<< "Input the choice: " << endl;
 	cin  >> nChoice;
@@ -954,12 +944,6 @@ int main(int argc, _TCHAR* argv[])
 	glutDisplayFunc(myDisplay);
 	glutSpecialFunc(mySpecialFunc);
 
-	cube.CreateCube(2);
-	tetrahedron.CreateTetrahedron(4);
-	cuboid.CreateCuboid(2, 4, 6);
-	cylinder.CreateCylinder(20, 2, 2);
-	sphere.CreateSphere(16, 10, 2);
-	torus.CreateTorus(1, 3);
 	platonic8.CreatePlatonic8(1);
 	platonic12.CreatePlatonic8(1);
 	platonic20.CreatePlatonic8(1);
