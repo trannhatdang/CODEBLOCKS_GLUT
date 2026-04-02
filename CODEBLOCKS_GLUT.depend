@@ -1,9 +1,8 @@
 # depslib dependency file v1.0
-1772958331 source:d:\dh\hk252\codeblocks_glut\main.cpp
-	<Windows.h>
+1775100277 source:d:\dh\hk252\codeblocks_glut\main.cpp
+	<windows.h>
 	<math.h>
-	<iostream>
-	<glut.h>
+	<gl\glut.h>
 
 1772680712 d:\dh\hk252\openglcb\include\gl\glut.h
 	<windows.h>
