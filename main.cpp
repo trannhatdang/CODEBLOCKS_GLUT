@@ -1,240 +1,220 @@
 #include <windows.h>
-#include <stdio.h>
 #include <math.h>
 #include <gl\glut.h>
+#include <iostream>
 
-const int screenWidth = 700;
-const int screenHeight = 700;
-int nChoice = 0;
+using namespace std;
 
-void init(){
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glOrtho(-1.2, 1.2, -1.2, 1.2, 0.1, 100);
-}
-void setLight(){
-	GLfloat	lightIntensity[]={0.7f, 0.7f, 0.7f, 1.0f};
-	GLfloat light_position[]={10, 10, 20.0f, 0.0f};
-	glLightfv(GL_LIGHT0, GL_POSITION, light_position);
-	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightIntensity);
+#define		PI	3.1415926
 
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glShadeModel(GL_SMOOTH);
-}
-void setMaterial(){
-	GLfloat	mat_ambient[]={0.7f, 0.7f, 0.7f, 1.0f};
-	GLfloat	mat_diffuse[]={1.0f, 0.0f, 0.0f, 1.0f};
-	GLfloat	mat_specular[]={1.0f, 1.0f, 1.0f, 1.0f};
-	GLfloat mat_shininess[] = {50.0f};
+int		nHeight = 600;
+int		nWidth = 600;
 
-	glMaterialfv(GL_FRONT,GL_AMBIENT, mat_ambient);
-	glMaterialfv(GL_FRONT,GL_DIFFUSE, mat_diffuse);
-}
-void setCamera(){
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
+const GLfloat lightColor[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+const GLfloat lightAmbColor[] = { 0.1f, 0.1f, 0.1f, 1.0f};
+const GLfloat lightPos[] = { 5.0, 0.0, 0.0, 0.0 };
 
-	gluLookAt(10, 6, 10, 0.0, 0.5, 0.0, 0.0, 1.0, 0.0);
-}
-void drawAxis(){
-	float	xmax = 1.5, ymax = 1.5, zmax = 1.5;
-	glColor3f(0.0, 0.0, 1.0);
-	glBegin(GL_LINES);
-		glVertex3f(-xmax, 0, 0);
-		glVertex3f(xmax, 0, 0);
-		glVertex3f(0, -ymax, 0);
-		glVertex3f(0, ymax, 0);
-		glVertex3f(0, 0, -zmax);
-		glVertex3f(0, 0, zmax);
-	glEnd();
+GLboolean m_lightOn = GL_TRUE;
 
-	glColor3f(0.0, 0.0, 0.0);
-	void * font = GLUT_BITMAP_TIMES_ROMAN_24;
+GLboolean m_smoothshadeModeOn = GL_TRUE;
 
-	glRasterPos3f(1.5, 0, 0);
-	glutBitmapCharacter(font, 'X');
+float	m_angle = 0.0;
 
-	glRasterPos3f(0, 1.5, 0);
-	glutBitmapCharacter(font, 'Y');
-
-	glRasterPos3f(0, 0, 1.5);
-	glutBitmapCharacter(font, 'Z');
-}
-
-void drawCuboid(float x, float y, float z)
+void myInit()
 {
-	glBegin(GL_LINE_LOOP);
-		glVertex3f(0, 0, 0);
-		glVertex3f(x, 0, 0);
-		glVertex3f(x, y, 0);
-		glVertex3f(0, y, 0);
-	glEnd();
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_NORMALIZE);
+	glClearColor(0, 0, 0, 1);
 
-	glBegin(GL_LINE_LOOP);
-		glVertex3f(0, 0, 0);
-		glVertex3f(x, 0, 0);
-		glVertex3f(x, 0, z);
-		glVertex3f(0, 0, z);
-	glEnd();
+	//set up the light
+	glLightfv(GL_LIGHT0, GL_AMBIENT, lightAmbColor);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, lightColor);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, lightColor);
+}
+void mySetup(int width, int height)
+{
+	glViewport(0, 0, width, height);		// reset the viewport to new dimensions
+	glMatrixMode(GL_PROJECTION);			// set projection matrix current matrix
+	glLoadIdentity();						// reset projection matrix
 
-	glBegin(GL_LINE_LOOP);
-		glVertex3f(0, 0, 0);
-		glVertex3f(0, y, 0);
-		glVertex3f(0, y, z);
-		glVertex3f(0, 0, z);
-	glEnd();
+	// calculate aspect ratio of window
+	gluPerspective(60.0f,(GLfloat)width/(GLfloat)height,1.0f,1000.0f);
 
-	glBegin(GL_LINE_LOOP);
-		glVertex3f(0, y, 0);
-		glVertex3f(x, y, 0);
-		glVertex3f(x, y, z);
-		glVertex3f(0, y, z);
-	glEnd();
+	glMatrixMode(GL_MODELVIEW);				// set modelview matrix
+	glLoadIdentity();						// reset modelview matrix
 
-	glBegin(GL_LINE_LOOP);
-		glVertex3f(0, 0, z);
-		glVertex3f(0, y, z);
-		glVertex3f(x, y, z);
-		glVertex3f(x, 0, z);
-	glEnd();
+}
+void setMaterial(float ar, float ag, float ab,
+				float dr, float dg, float db,
+				float sr, float sg, float sb)
+{
+	GLfloat ambient[4];
+	GLfloat diffuse[4];
+	GLfloat specular[4];
+	GLfloat	shiness = 100.8;
+
+	ambient[0] = ar; ambient[1] = ag; ambient[2] = ab; ambient[3] = 1;
+	diffuse[0] = dr; diffuse[1] = dg; diffuse[2] = db; diffuse[3] = 1;
+	specular[0]= sr; specular[1]= sg; specular[2]= sb; specular[3]= 1;
+
+	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, ambient);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuse);
+	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, specular);
+	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, shiness);
 }
 
-void display(){
-	glClearColor(1.0,1.0,1.0,0.0);
+void myDisplay()
+{
+	glClearColor(0.0,0.0,0.0,1.0);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-	setCamera();
-	drawAxis();
-	switch(nChoice)
-	{
-		case 2:
-			glColor3f(0.0, 0.0, 1.0);
-			drawCuboid(0.5, 1, 0.9);
-			break;
-		default:
-			break;
-	}
 
-	setLight();
-	setMaterial();
+	glLoadIdentity();
+	gluLookAt(6.0, 4.0, 6.0, 0.0, 0.0, 2.0, 0.0, 1.0, 0.0);
 
-	switch(nChoice)
-	{
-		case 0:
-			glutSolidTeapot(0.25);
-			break;
-		case 1:
-			glPushMatrix();
-			glTranslatef(1, 0, 0);
-			glutSolidTeapot(0.25);
-			glPopMatrix();
-			break;
-		case 2:
-			glPushMatrix();
-			glTranslatef(0.5, 1, 0.9);
-			glutSolidTeapot(0.25);
-			glPopMatrix();
-			break;
-		case 3:
-			glPushMatrix();
-			glTranslatef(0, 0, 1);
-			glRotatef(90, 0, 1, 0);
-			glutSolidTeapot(0.25);
-			glPopMatrix();
-			break;
-		case 4:
-			glPushMatrix();
-			glTranslatef(0, 1, 0);
-			glRotatef(60, 0, 1, 0);
-			glScalef(0.5, 0.5, 0.5);
-			glutSolidTeapot(0.25);
-			glPopMatrix();
-			break;
-		case 5:
-			for(int i = 0; i < 4; ++i)
-			{
-				glPushMatrix();
-				glRotatef(90 * i, 0, 1, 0);
-				glTranslatef(1, 0, 0);
-				glutSolidTeapot(0.25);
-				glPopMatrix();
-			}
-			break;
-		case 6:
-			glutSolidTeapot(0.25);
+	glRotatef(m_angle, 0.0, 1.0, 0.0);
 
-			for(int i = 0; i < 5; ++i)
-			{
-				glPushMatrix();
-				for(int j = 0; j < i; ++j)
-				{
-					glTranslatef(0, 0.3, 0);
-				}
-				for(int j = 0; j < i; ++j)
-				{
-					glScalef(0.8, 0.8, 0.8);
-				}
+	//light
+	if(m_lightOn)
+		glEnable(GL_LIGHT0);
+	else
+		glDisable(GL_LIGHT0);
 
-				glutSolidTeapot(0.25);
-				glPopMatrix();
-			}
-			break;
-		case 7:
-			glPushMatrix();
-			for(int i = 0; i < 5; ++i)
-			{
-				for(int j = 0; j < (5 - i); ++j)
-				{
-					glPushMatrix();
-					glTranslatef(j * 0.25, 0, i * 0.25);
-					glutSolidCube(0.2);
-					glPopMatrix();
-				}
-			}
 
-			glRotatef(-90, 1, 0, 0);
+	if(m_smoothshadeModeOn)
+		glShadeModel(GL_SMOOTH);
+	else
+		glShadeModel(GL_FLAT);
 
-			for(int i = 0; i < 5; ++i)
-			{
-				for(int j = 0; j < (5 - i); ++j)
-				{
-					glPushMatrix();
-					glTranslatef(j * 0.25, 0, i * 0.25);
-					glutSolidCube(0.2);
-					glPopMatrix();
-				}
-			}
+	GLUquadricObj* obj;
 
-			glPopMatrix();
-			break;
-		case 8:
-			glPushMatrix();
+	//draw the chest
+	setMaterial(0.1, 0.1, 0.1,
+				0, 1, 0,
+				1, 1, 1);
+	glPushMatrix();
+	glutSolidSphere(1, 100, 100);
+	glPopMatrix();
 
-			glRotatef(-90, 0, 1, 0);
+	//draw the abdomen
+	setMaterial(0.1, 0.1, 0.1,
+				1, 0, 0,
+				1, 1, 1);
+	glPushMatrix();
+	glTranslated(0.0, -1.8, 0.0);
+	glutSolidSphere(1.3, 20, 20);
+	glPopMatrix();
 
-			glRotatef(-90, 1, 0, 0);
+	//draw the head
+	setMaterial(0.1, 0.1, 0.1,
+				1, 1, 0,
+				1, 1, 1);
+	glPushMatrix();
+	glTranslated(0.0, 1.3, 0.0);
+	glutSolidSphere(.8, 15, 15);
+	glPopMatrix();
 
-			glPopMatrix();
-			break;
-		default:
-			break;
-	}
+	//draw nose
+	setMaterial(0.1, 0.1, 0.1,
+				1, 0, 0,
+				1, 1, 1);
+	glPushMatrix();
+	glTranslated(1.0, 1.3, 0.0);
+	glutSolidSphere(1, 3, 3);
+	glPopMatrix();
 
+	//draw left eye
+
+	//draw right eye
+
+	//draw the hat
+
+	//draw left hand
+
+	//draw right hand
+
+	//draw noel tree
+	setMaterial(0.1, 0.1, 0.1,
+				0, 1, 0,
+				1, 1, 1);
+
+	glPushMatrix();
+	glTranslated(0.0, 0.0, 5.0);
+	glTranslated(0.0, -1.0, 0.0);
+	glRotated(-90, 1.0, 0.0, 0.0);
+	glutSolidCone(0.8, 2.5, 30, 20);
+	glPopMatrix();
+
+	glPushMatrix();
+	glTranslated(0.0, 0.0, 5.0);
+	glTranslated(0.0, 1.0, 0.0);
+	glRotated(-90, 1.0, 0.0, 0.0);
+	glutSolidCone(0.8, 2.5, 30, 20);
+	glPopMatrix();
+
+	setMaterial(0.1, 0.1, 0.1,
+				1, 0.5, 0,
+				1, 1, 1);
+	glPushMatrix();
+	glTranslated(0.0, 0.0, 5.0);
+	glTranslated(0.0, -3.0, 0.0);
+	glRotated(-90, 1.0, 0.0, 0.0);
+	obj = gluNewQuadric();
+	gluQuadricDrawStyle(obj, GLU_FILL);
+	gluCylinder(obj, 0.4, 0.4, 3, 30, 10);
+	glPopMatrix();
+	gluDeleteQuadric(obj);
+
+	glutSwapBuffers();
 	glFlush();
 }
 
-int main(int argc, _TCHAR* argv[]){
+void myReshape(int cx, int cy)
+{
+	mySetup(cx, cy);
+	myDisplay();
+}
+void myIdle()
+{
+	float	dt = 0.2;
+	m_angle = m_angle + dt;
+	if(m_angle >= 360)
+		m_angle = 0;
+	myDisplay();
+}
+void myKeyboard(unsigned char theKey, int mouseX, int mouseY)
+{
+	switch(theKey)
+	{
+	case 'o':
+		m_lightOn = !m_lightOn;
+		break;
+	case 's':
+		m_smoothshadeModeOn = !m_smoothshadeModeOn;
+		break;
+	default:
+		break;
+	}
+}
+int main(int argc, _TCHAR* argv[])
+{
+	cout << "Press following key to control the program\n\n";
+	cout << "<o>. Turn on/off the light\n";
+	cout << "<s>. Turn on/off smooth shading\n";
+
 	glutInit(&argc, (char**)argv); //initialize the tool kit
-	glutInitDisplayMode(GLUT_SINGLE |GLUT_RGB |GLUT_DEPTH);
-	glutInitWindowSize(screenWidth, screenHeight); //set window size
+	glutInitDisplayMode(GLUT_SINGLE |GLUT_RGB |GLUT_DEPTH);//set the display mode
+	glutInitWindowSize(nWidth, nHeight); //set window size
 	glutInitWindowPosition(0, 0); // set window position on screen
-	glutCreateWindow("Lab-Transformation"); // open the screen window
+	glutCreateWindow("Lab Lighting - Bai 4"); // open the screen window
 
-	glutDisplayFunc(display);
-	nChoice = 6;
 
-	init();
-	glEnable(GL_DEPTH_TEST);
+	myInit();
+
+	glutReshapeFunc(myReshape);
+	glutDisplayFunc(myDisplay);
+	glutIdleFunc(myIdle);
+	glutKeyboardFunc(myKeyboard);
 
 	glutMainLoop();
 	return 0;
