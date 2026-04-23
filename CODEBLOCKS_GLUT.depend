@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1776914871 source:d:\dh\hk252\codeblocks_glut\main.cpp
+1776925552 source:d:\dh\hk252\codeblocks_glut\main.cpp
 	<windows.h>
 	<math.h>
 	<gl\glut.h>
