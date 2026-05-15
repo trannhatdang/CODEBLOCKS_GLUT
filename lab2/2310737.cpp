@@ -401,8 +401,6 @@ void Mesh::CreateTorus(int fSizeA, int fSizeD)
 			face[i * numV + j].vert[1].vertIndex = i * numV + ((j + 1) % numV);
 			face[i * numV + j].vert[3].vertIndex = i * numV + j + numV;
 			face[i * numV + j].vert[2].vertIndex = i * numV + ((j + 1) % numV) + numV;
-
-			//std::cout << "( " << pt[i * numV + j].x << ", " << pt[i + numV + j].y << ", " << pt[i + numV + j].z << ")" << std::endl;
 		}
 	}
 }
