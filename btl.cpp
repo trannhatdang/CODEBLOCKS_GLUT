@@ -6,14 +6,17 @@
 using namespace std;
 /////////////////////////////////////////////////////////////////////
 #define PI			3.1415926
-#define	COLORNUM	14
+#define	COLORNUM	17
 const float DEG2RAD = 3.14159f / 180.0f;
 
 float	ColorArr[COLORNUM][3] = { { 1.0, 0.0, 0.0 },{ 0.0, 1.0, 0.0 },{ 0.0,  0.0, 1.0 },
 					{ 1.0, 1.0,  0.0 },{ 1.0, 0.0, 1.0 },{ 0.0, 1.0, 1.0 },
 					{ 0.3, 0.3, 0.3 },{ 0.5, 0.5, 0.5 },{ 0.9,  0.9, 0.9 },
 					{ 1.0, 0.5,  0.5 },{ 0.5, 1.0, 0.5 },{ 0.5, 0.5, 1.0 },
-					{ 0.0, 0.0, 0.0 },{ 0.7, 0.7, 0.7 } };
+					{ 0.0, 0.0, 0.0 },{ 0.7, 0.7, 0.7 },
+					{ 20/255, 136/255, 219/255 },
+					{ 3/255, 43/255, 145/255 }, 
+					{ 0, 0, 0 } };
 
 class Point3
 {
@@ -105,7 +108,7 @@ public:
 
 	void CreateTorus(int fSizeA, int fSizeD);
 	void CreateCylinder(int nSegment, float fHeight, float fRadius);
-	void CreateBKLogo();
+	void CreateBKLogo(float rhombusLength);
 };
 
 void Mesh::SetColor(int colorIdx)
@@ -244,11 +247,135 @@ void Mesh::CreateTorus(int fSizeA, int fSizeD)
 		}
 	}
 }
-void Mesh::CreateBKLogo()
+void Mesh::CreateBKLogo(float rhombusLength)
 {
-	numVerts = 100;
+	numVerts = 16;
 	pt = new Point3[numVerts];
 
+	float hort_leftMost = 2 * rhombusLength * sqrt(3);
+	float hort_left = -rhombusLength * sqrt(3);
+	float hort_mid = 0;
+	float hort_right = rhombusLength * sqrt(3);
+	float hort_rightMost = 2 * rhombusLength * sqrt(3);
+
+	float vert_topMost = rhombusLength * 2;
+	float vert_top_3 = rhombusLength * 3/2;
+	float vert_top_2 = rhombusLength;
+	float vert_top = rhombusLength / 2;
+	float vert_mid = 0;
+	float vert_bot = -rhombusLength / 2;
+	float vert_botMost = -rhombusLength * 2;
+
+	numFaces = 18;
+	face = new Face[numFaces];
+	for(int i = 0; i < numFaces; ++i)
+	{
+		face[i].nVerts = 3;
+		face[i].vert = new VertexID[3];
+	}
+
+	pt[0].set(hort_mid, vert_topMost, 0);
+	pt[1].set(hort_left, vert_top_3, 0);
+	pt[2].set(hort_mid, vert_top_2, 0);
+	pt[3].set(hort_left, vert_top, 0);
+	pt[4].set(hort_right, vert_top_3, 0);
+	pt[5].set(hort_right, vert_top, 0);
+	pt[6].set(hort_mid, vert_mid, 0);
+	pt[7].set(hort_leftMost, vert_mid, 0);
+	pt[8].set(hort_left, vert_bot, 0);
+	pt[9].set(hort_mid, vert_botMost, 0);
+	pt[10].set(hort_right, vert_bot, 0);
+	pt[11].set(hort_rightMost, vert_mid, 0);
+	pt[12].set(hort_leftMost, vert_bot, 0);
+	pt[13].set(hort_left, vert_botMost, 0);
+	pt[14].set(hort_right, vert_botMost, 0);
+	pt[15].set(hort_rightMost, vert_bot, 0);
+
+	face[0].vert[0].vertIndex = 0;
+	face[0].vert[1].vertIndex = 1;
+	face[0].vert[2].vertIndex = 2;
+
+	face[1].vert[0].vertIndex = 1;
+	face[1].vert[1].vertIndex = 2;
+	face[1].vert[2].vertIndex = 3;
+
+	face[2].vert[0].vertIndex = 0;
+	face[2].vert[1].vertIndex = 2;
+	face[2].vert[2].vertIndex = 4;
+
+	face[3].vert[0].vertIndex = 2;
+	face[3].vert[1].vertIndex = 4;
+	face[3].vert[2].vertIndex = 5;
+
+	// face[4].vert[0].vertIndex = 3;
+	// face[4].vert[1].vertIndex = 2;
+	// face[4].vert[2].vertIndex = 6;
+	//
+	// face[5].vert[0].vertIndex = 2;
+	// face[5].vert[1].vertIndex = 5;
+	// face[5].vert[2].vertIndex = 6;
+	//
+	// face[6].vert[0].vertIndex = 3;
+	// face[6].vert[1].vertIndex = 7;
+	// face[6].vert[2].vertIndex = 8;
+
+	// face[7].vert[0].vertIndex = 3;
+	// face[7].vert[1].vertIndex = 6;
+	// face[7].vert[2].vertIndex = 8;
+	//
+	// face[8].vert[0].vertIndex = 6;
+	// face[8].vert[1].vertIndex = 5;
+	// face[8].vert[2].vertIndex = 10;
+	//
+	// face[9].vert[0].vertIndex = 5;
+	// face[9].vert[1].vertIndex = 11;
+	// face[9].vert[2].vertIndex = 10;
+	//
+	// face[10].vert[0].vertIndex = 7;
+	// face[10].vert[1].vertIndex = 8;
+	// face[10].vert[2].vertIndex = 12;
+	//
+	// face[11].vert[0].vertIndex = 6;
+	// face[11].vert[1].vertIndex = 8;
+	// face[11].vert[2].vertIndex = 9;
+	//
+	// face[12].vert[0].vertIndex = 6;
+	// face[12].vert[1].vertIndex = 9;
+	// face[12].vert[2].vertIndex = 10;
+	//
+	// face[13].vert[0].vertIndex = 10;
+	// face[13].vert[1].vertIndex = 11;
+	// face[13].vert[2].vertIndex = 15;
+	//
+	// face[14].vert[0].vertIndex = 12;
+	// face[14].vert[1].vertIndex = 8;
+	// face[14].vert[2].vertIndex = 13;
+	//
+	// face[15].vert[0].vertIndex = 8;
+	// face[15].vert[1].vertIndex = 13;
+	// face[15].vert[2].vertIndex = 9;
+	//
+	// face[16].vert[0].vertIndex = 9;
+	// face[16].vert[1].vertIndex = 10;
+	// face[16].vert[2].vertIndex = 14;
+	//
+	// face[17].vert[0].vertIndex = 10;
+	// face[17].vert[1].vertIndex = 14;
+	// face[17].vert[2].vertIndex = 15;
+
+	// int lightBlue[6] = {1, 3, 6, 10, 16, 17};
+	// int deepBlue[6] = {0, 2, 9, 13, 14, 15};
+	// int white[6] = {4, 5, 7, 8, 11, 12};
+	//
+	// for(int i = 0; i < 6; ++i)
+	// {
+	// 	for(int j = 0; j < 3; ++j)
+	// 	{
+	// 		face[lightBlue[i]].vert[j].colorIndex = 15;
+	// 		face[deepBlue[i]].vert[j].colorIndex = 16;
+	// 		face[white[i]].vert[j].colorIndex = 17;
+	// 	}
+	// }
 }
 
 
@@ -333,18 +460,9 @@ void myDisplay()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	////////////////////////////////////////////////////
 	glViewport(0, 0, screenWidth, screenHeight);
-
-	glPushMatrix();
 	drawAxis();
 
 	glRotatef(angle, 0, 1, 0);
-
-	glutSolidCube(1);
-
-	// gimbal1.SetColor(1);
-	gimbal1.slideZ = 5;
-	gimbal1.DrawColor();
-	gimbal2.DrawColor();
 
 	// base.SetColor(0);
 	// base.scaleX = 0.05f;
@@ -352,6 +470,14 @@ void myDisplay()
 	// base.scaleZ = 0.05f;
 	// base.slideZ = -5;
 	// base.DrawColor();
+	//
+	// gimbal1.SetColor(1);
+	// gimbal1.slideZ = 5;
+	// gimbal1.scaleX = 0.25f;
+	// gimbal1.scaleY = 0.25f;
+	// gimbal1.scaleZ = 0.25f;
+	// gimbal1.DrawColor();
+	bk.DrawColor();
 
 	glFlush();
 	glutSwapBuffers();
@@ -411,7 +537,8 @@ int main(int argc, _TCHAR* argv[])
 
 	base.CreateCylinder(50, 1, 1);
 	gimbal1.CreateTorus(1, 3);
-	gimbal2.CreateTorus(3, 1);
+	gimbal2.CreateTorus(1, 1);
+	bk.CreateBKLogo(1);
 
 	glutMainLoop();
 	return 0;

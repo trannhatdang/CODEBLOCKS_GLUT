@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <math.h>
 #include <iostream>
+#include <cstdio>
 #include <glut.h>
 
 using namespace std;
@@ -14,9 +15,10 @@ float	ColorArr[COLORNUM][3] = { { 1.0, 0.0, 0.0 },{ 0.0, 1.0, 0.0 },{ 0.0,  0.0,
 					{ 0.3, 0.3, 0.3 },{ 0.5, 0.5, 0.5 },{ 0.9,  0.9, 0.9 },
 					{ 1.0, 0.5,  0.5 },{ 0.5, 1.0, 0.5 },{ 0.5, 0.5, 1.0 },
 					{ 0.0, 0.0, 0.0 },{ 0.7, 0.7, 0.7 },
-					{ 20/255, 136/255, 219/255 },
-					{ 3/255, 43/255, 145/255 }, 
-					{ 0, 0, 0 } };
+					{ 20/255.0, 136/255.0, 219/255.0 },
+					// { 1, 0, 0 },
+					{ 3/255.0, 43/255.0, 145/255.0 },
+					{ 1.0, 1.0, 1.0 } };
 
 class Point3
 {
@@ -249,14 +251,14 @@ void Mesh::CreateTorus(int fSizeA, int fSizeD)
 }
 void Mesh::CreateBKLogo(float rhombusLength)
 {
-	numVerts = 16;
+	numVerts = 16 * 2;
 	pt = new Point3[numVerts];
 
-	float hort_leftMost = 2 * rhombusLength * sqrt(3);
-	float hort_left = -rhombusLength * sqrt(3);
+	float hort_leftMost = -2 * rhombusLength * sqrt(3)/2;
+	float hort_left = -rhombusLength * sqrt(3)/2;
 	float hort_mid = 0;
-	float hort_right = rhombusLength * sqrt(3);
-	float hort_rightMost = 2 * rhombusLength * sqrt(3);
+	float hort_right = rhombusLength * sqrt(3)/2;
+	float hort_rightMost = 2 * rhombusLength * sqrt(3)/2;
 
 	float vert_topMost = rhombusLength * 2;
 	float vert_top_3 = rhombusLength * 3/2;
@@ -264,14 +266,21 @@ void Mesh::CreateBKLogo(float rhombusLength)
 	float vert_top = rhombusLength / 2;
 	float vert_mid = 0;
 	float vert_bot = -rhombusLength / 2;
-	float vert_botMost = -rhombusLength * 2;
+	float vert_bot_2 = -rhombusLength;
+	float vert_botMost = -rhombusLength * 3/2;
 
-	numFaces = 18;
+	numFaces = 18 * 2 + 12;
 	face = new Face[numFaces];
-	for(int i = 0; i < numFaces; ++i)
+	for(int i = 0; i < 18 * 2; ++i)
 	{
 		face[i].nVerts = 3;
 		face[i].vert = new VertexID[3];
+	}
+
+	for(int i = 18 * 2; i < 18 * 2 + 12; ++i)
+	{
+		face[i].nVerts = 4;
+		face[i].vert = new VertexID[4];
 	}
 
 	pt[0].set(hort_mid, vert_topMost, 0);
@@ -283,13 +292,18 @@ void Mesh::CreateBKLogo(float rhombusLength)
 	pt[6].set(hort_mid, vert_mid, 0);
 	pt[7].set(hort_leftMost, vert_mid, 0);
 	pt[8].set(hort_left, vert_bot, 0);
-	pt[9].set(hort_mid, vert_botMost, 0);
+	pt[9].set(hort_mid, vert_bot_2, 0);
 	pt[10].set(hort_right, vert_bot, 0);
 	pt[11].set(hort_rightMost, vert_mid, 0);
-	pt[12].set(hort_leftMost, vert_bot, 0);
+	pt[12].set(hort_leftMost, vert_bot_2, 0);
 	pt[13].set(hort_left, vert_botMost, 0);
 	pt[14].set(hort_right, vert_botMost, 0);
-	pt[15].set(hort_rightMost, vert_bot, 0);
+	pt[15].set(hort_rightMost, vert_bot_2, 0);
+
+	for(int i = 16; i < 32; ++i)
+	{
+		pt[i].set(pt[i - 16].x, pt[i - 16].y, .25);
+	}
 
 	face[0].vert[0].vertIndex = 0;
 	face[0].vert[1].vertIndex = 1;
@@ -307,75 +321,107 @@ void Mesh::CreateBKLogo(float rhombusLength)
 	face[3].vert[1].vertIndex = 4;
 	face[3].vert[2].vertIndex = 5;
 
-	// face[4].vert[0].vertIndex = 3;
-	// face[4].vert[1].vertIndex = 2;
-	// face[4].vert[2].vertIndex = 6;
-	//
-	// face[5].vert[0].vertIndex = 2;
-	// face[5].vert[1].vertIndex = 5;
-	// face[5].vert[2].vertIndex = 6;
-	//
-	// face[6].vert[0].vertIndex = 3;
-	// face[6].vert[1].vertIndex = 7;
-	// face[6].vert[2].vertIndex = 8;
+	face[4].vert[0].vertIndex = 3;
+	face[4].vert[1].vertIndex = 2;
+	face[4].vert[2].vertIndex = 6;
 
-	// face[7].vert[0].vertIndex = 3;
-	// face[7].vert[1].vertIndex = 6;
-	// face[7].vert[2].vertIndex = 8;
-	//
-	// face[8].vert[0].vertIndex = 6;
-	// face[8].vert[1].vertIndex = 5;
-	// face[8].vert[2].vertIndex = 10;
-	//
-	// face[9].vert[0].vertIndex = 5;
-	// face[9].vert[1].vertIndex = 11;
-	// face[9].vert[2].vertIndex = 10;
-	//
-	// face[10].vert[0].vertIndex = 7;
-	// face[10].vert[1].vertIndex = 8;
-	// face[10].vert[2].vertIndex = 12;
-	//
-	// face[11].vert[0].vertIndex = 6;
-	// face[11].vert[1].vertIndex = 8;
-	// face[11].vert[2].vertIndex = 9;
-	//
-	// face[12].vert[0].vertIndex = 6;
-	// face[12].vert[1].vertIndex = 9;
-	// face[12].vert[2].vertIndex = 10;
-	//
-	// face[13].vert[0].vertIndex = 10;
-	// face[13].vert[1].vertIndex = 11;
-	// face[13].vert[2].vertIndex = 15;
-	//
-	// face[14].vert[0].vertIndex = 12;
-	// face[14].vert[1].vertIndex = 8;
-	// face[14].vert[2].vertIndex = 13;
-	//
-	// face[15].vert[0].vertIndex = 8;
-	// face[15].vert[1].vertIndex = 13;
-	// face[15].vert[2].vertIndex = 9;
-	//
-	// face[16].vert[0].vertIndex = 9;
-	// face[16].vert[1].vertIndex = 10;
-	// face[16].vert[2].vertIndex = 14;
-	//
-	// face[17].vert[0].vertIndex = 10;
-	// face[17].vert[1].vertIndex = 14;
-	// face[17].vert[2].vertIndex = 15;
+	face[5].vert[0].vertIndex = 2;
+	face[5].vert[1].vertIndex = 5;
+	face[5].vert[2].vertIndex = 6;
 
-	// int lightBlue[6] = {1, 3, 6, 10, 16, 17};
-	// int deepBlue[6] = {0, 2, 9, 13, 14, 15};
-	// int white[6] = {4, 5, 7, 8, 11, 12};
-	//
-	// for(int i = 0; i < 6; ++i)
-	// {
-	// 	for(int j = 0; j < 3; ++j)
-	// 	{
-	// 		face[lightBlue[i]].vert[j].colorIndex = 15;
-	// 		face[deepBlue[i]].vert[j].colorIndex = 16;
-	// 		face[white[i]].vert[j].colorIndex = 17;
-	// 	}
-	// }
+	face[6].vert[0].vertIndex = 3;
+	face[6].vert[1].vertIndex = 7;
+	face[6].vert[2].vertIndex = 8;
+
+	face[7].vert[0].vertIndex = 3;
+	face[7].vert[1].vertIndex = 6;
+	face[7].vert[2].vertIndex = 8;
+
+	face[8].vert[0].vertIndex = 6;
+	face[8].vert[1].vertIndex = 5;
+	face[8].vert[2].vertIndex = 10;
+
+	face[9].vert[0].vertIndex = 5;
+	face[9].vert[1].vertIndex = 11;
+	face[9].vert[2].vertIndex = 10;
+
+	face[10].vert[0].vertIndex = 7;
+	face[10].vert[1].vertIndex = 8;
+	face[10].vert[2].vertIndex = 12;
+
+	face[11].vert[0].vertIndex = 6;
+	face[11].vert[1].vertIndex = 8;
+	face[11].vert[2].vertIndex = 9;
+
+	face[12].vert[0].vertIndex = 6;
+	face[12].vert[1].vertIndex = 9;
+	face[12].vert[2].vertIndex = 10;
+
+	face[13].vert[0].vertIndex = 10;
+	face[13].vert[1].vertIndex = 11;
+	face[13].vert[2].vertIndex = 15;
+
+	face[14].vert[0].vertIndex = 12;
+	face[14].vert[1].vertIndex = 8;
+	face[14].vert[2].vertIndex = 13;
+
+	face[15].vert[0].vertIndex = 8;
+	face[15].vert[1].vertIndex = 13;
+	face[15].vert[2].vertIndex = 9;
+
+	face[16].vert[0].vertIndex = 9;
+	face[16].vert[1].vertIndex = 10;
+	face[16].vert[2].vertIndex = 14;
+
+	face[17].vert[0].vertIndex = 10;
+	face[17].vert[1].vertIndex = 14;
+	face[17].vert[2].vertIndex = 15;
+
+	for(int i = 18; i < 18 * 2; ++i)
+	{
+		for(int j = 0; j < 3; ++j)
+		{
+			face[i].vert[j].vertIndex = face[i - 18].vert[j].vertIndex + 16;
+		}
+	}
+
+	int edgeVertexes[12] = {1, 0, 4, 5, 11, 15, 14, 9, 13, 12, 7, 3};
+
+	for(int i = 0; i < 12; ++i)
+	{
+		face[i + 36].vert[0].vertIndex = edgeVertexes[i];
+		face[i + 36].vert[1].vertIndex = i < 12 - 1 ? edgeVertexes[i + 1] : edgeVertexes[0];
+		face[i + 36].vert[2].vertIndex = i < 12 - 1 ? edgeVertexes[i + 1] + 16 : edgeVertexes[0] + 16;
+		face[i + 36].vert[3].vertIndex = edgeVertexes[i] + 16;
+	}
+
+	int lightBlue[12] = {2, 3, 6, 10, 16, 17, 37, 38, 41, 42, 45, 46};
+	int deepBlue[12] = {0, 1, 9, 13, 14, 15, 36, 39, 40, 43, 44, 47};
+	int white[6] = {4, 5, 7, 8, 11, 12};
+
+	for(int i = 0; i < 6; ++i)
+	{
+		for(int j = 0; j < 3; ++j)
+		{
+			face[lightBlue[i]].vert[j].colorIndex = 14;
+			face[deepBlue[i]].vert[j].colorIndex = 15;
+			face[white[i]].vert[j].colorIndex = 16;
+
+			face[lightBlue[i] + 18].vert[j].colorIndex = 14;
+			face[deepBlue[i] + 18].vert[j].colorIndex = 15;
+			face[white[i] + 18].vert[j].colorIndex = 16;
+			// printf("%f %f %f\n", ColorArr[15][0], ColorArr[15][1], ColorArr[15][2]);
+		}
+	}
+
+	for(int i = 6; i < 12; ++i)
+	{
+		for(int j = 0; j < 4; ++j)
+		{
+			face[lightBlue[i]].vert[j].colorIndex = 14;
+			face[deepBlue[i]].vert[j].colorIndex = 15;
+		}
+	}
 }
 
 
@@ -397,8 +443,8 @@ void Mesh::DrawColor()
 			int		iv = face[f].vert[v].vertIndex;
 			int		ic = face[f].vert[v].colorIndex;
 
-			ic = f & COLORNUM;
-
+			// ic = f & COLORNUM;
+			//
 			glColor3f(ColorArr[ic][0], ColorArr[ic][1], ColorArr[ic][2]);
 			glVertex3f(pt[iv].x, pt[iv].y, pt[iv].z);
 		}
@@ -538,7 +584,7 @@ int main(int argc, _TCHAR* argv[])
 	base.CreateCylinder(50, 1, 1);
 	gimbal1.CreateTorus(1, 3);
 	gimbal2.CreateTorus(1, 1);
-	bk.CreateBKLogo(1);
+	bk.CreateBKLogo(1.5);
 
 	glutMainLoop();
 	return 0;
