@@ -477,7 +477,7 @@ void myDisplay()
 	// gimbal1.scaleY = 0.25f;
 	// gimbal1.scaleZ = 0.25f;
 	// gimbal1.DrawColor();
-	bk.DrawColor();
+	bk.Draw();
 
 	glFlush();
 	glutSwapBuffers();
