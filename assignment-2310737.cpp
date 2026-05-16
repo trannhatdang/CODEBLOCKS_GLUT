@@ -869,7 +869,7 @@ Mesh		frame_connector_2;
 Mesh		gimbal1;
 Mesh		gimbal1_connector_1;
 Mesh		gimbal1_connector_2;
-Mesh 		rotor;	
+Mesh 		rotor;
 Mesh		gimbal2;
 Mesh		gimbal2_connector_1;
 Mesh		gimbal2_connector_2;
@@ -1028,7 +1028,6 @@ void myKeyboard(unsigned char key, int x, int y)
 		break;
 	case '-':
 		camera_dis -= 0.5f;
-		if (camera_dis < 0.5f) camera_dis = 0.5f;
 		break;
 	case 'F':
 	case 'f':
@@ -1079,7 +1078,7 @@ int main(int argc, _TCHAR* argv[])
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(screenWidth, screenHeight);
 	glutInitWindowPosition(100, 100);
-	glutCreateWindow("Assignment - Tran Nhat Dang - 2310737");
+	glutCreateWindow("Assignment-Tran Nhat Dang - 2310737");
 
 	myInit();
 	glutKeyboardFunc(myKeyboard);
